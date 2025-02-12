@@ -135,6 +135,7 @@ public abstract class CommonCommandManager {
     }
 
     public abstract void sendMessage(Object target, String message);
+
     public abstract void broadcastMessage(String message);
 
 }

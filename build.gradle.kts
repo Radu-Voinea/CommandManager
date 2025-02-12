@@ -12,9 +12,9 @@ group = _group
 
 fun DependencyHandlerScope.applyDependencies() {
     // Dependencies
-    if(project.properties["com.voinearadu.utils.local"] != null){
+    if (project.properties["com.voinearadu.utils.local"] != null) {
         api(project(project.properties["com.voinearadu.utils.local"] as String))
-    }else{
+    } else {
         api(libs.voinearadu.utils)
     }
 
