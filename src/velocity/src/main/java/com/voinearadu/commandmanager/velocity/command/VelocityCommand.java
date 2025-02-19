@@ -1,14 +1,14 @@
 package com.voinearadu.commandmanager.velocity.command;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
+import com.velocitypowered.api.proxy.Player;
 import com.voinearadu.commandmanager.common.command.CommonCommand;
 import com.voinearadu.commandmanager.common.manager.CommonCommandManager;
 import com.voinearadu.commandmanager.common.utils.ListUtils;
 import com.voinearadu.commandmanager.velocity.manager.VelocityCommandManager;
 import com.voinearadu.utils.logger.Logger;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.command.SimpleCommand;
-import com.velocitypowered.api.proxy.ConsoleCommandSource;
-import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
