@@ -1,19 +1,19 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id(libs.plugins.loom.v21.get().pluginId) version libs.plugins.loom.v21.get().version.toString()
+    alias(libs.plugins.fabric.loom)
 }
 
 dependencies {
     // Minecraft
-    minecraft(libs.minecraft.v21)
+    minecraft(libs.minecraft)
     mappings(loom.layered {
         officialMojangMappings()
-        parchment(libs.parchment.mappings.v21)
+        parchment(libs.parchment)
     })
 
-    modCompileOnly(libs.fabric.loader.v21)
-    modCompileOnly(libs.fabric.api.v21)
+    modCompileOnly(libs.fabric.loader)
+    modCompileOnly(libs.fabric.api)
 
     // Project
     api(project(":command-manager-common"))
