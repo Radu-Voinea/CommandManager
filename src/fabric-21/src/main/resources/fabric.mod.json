@@ -1,13 +1,11 @@
 {
 	"schemaVersion": 1,
-	"id": "command_manager_fabric_19",
+	"id": "command_manager_fabric",
 	"version": "UNKNOWN",
-	"name": "Command Manager Fabric 1.19",
+	"name": "Command Manager Fabric",
 	"description": "",
 	"authors": [],
-	"contact": {
-		"repo": "https://github.com/PokeNinjas/Fabric_1_19"
-	},
+	"contact": {},
 	"license": "All-Rights-Reserved",
 	"icon": "assets/command_manager/icon.png",
 	"environment": "server",

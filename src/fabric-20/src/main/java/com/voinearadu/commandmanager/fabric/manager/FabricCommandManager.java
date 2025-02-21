@@ -1,10 +1,10 @@
-package com.voinearadu.commandmanager.fabric.manager;
+package com.raduvoinea.commandmanager.fabric.manager;
 
-import com.voinearadu.commandmanager.common.command.CommonCommand;
-import com.voinearadu.commandmanager.common.manager.CommonCommandManager;
-import com.voinearadu.commandmanager.fabric.command.FabricCommand;
-import com.voinearadu.utils.logger.Logger;
-import com.voinearadu.utils.reflections.Reflections;
+import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
+import com.raduvoinea.commandmanager.fabric.command.FabricCommand;
+import com.raduvoinea.utils.logger.Logger;
+import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.network.chat.Component;

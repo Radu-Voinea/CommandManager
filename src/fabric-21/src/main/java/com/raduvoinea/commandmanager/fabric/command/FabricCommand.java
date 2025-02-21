@@ -1,13 +1,13 @@
-package com.voinearadu.commandmanager.fabric.command;
+package com.raduvoinea.commandmanager.fabric.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.voinearadu.commandmanager.common.command.CommonCommand;
-import com.voinearadu.commandmanager.common.manager.CommonCommandManager;
-import com.voinearadu.commandmanager.fabric.manager.FabricCommandManager;
-import com.voinearadu.utils.logger.Logger;
+import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
+import com.raduvoinea.commandmanager.fabric.manager.FabricCommandManager;
+import com.raduvoinea.utils.logger.Logger;
 import lombok.SneakyThrows;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,6 +1,6 @@
-package com.voinearadu.commandmanager.fabric.manager;
+package com.raduvoinea.commandmanager.fabric.manager;
 
-import com.voinearadu.commandmanager.common.manager.CommonMiniMessageManager;
+import com.raduvoinea.commandmanager.common.manager.CommonMiniMessageManager;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.kyori.adventure.platform.fabric.FabricServerAudiences;
 import net.kyori.adventure.text.TextComponent;

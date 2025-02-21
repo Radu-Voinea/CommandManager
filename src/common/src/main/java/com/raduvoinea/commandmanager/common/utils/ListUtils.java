@@ -1,4 +1,4 @@
-package com.voinearadu.commandmanager.common.utils;
+package com.raduvoinea.commandmanager.common.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;

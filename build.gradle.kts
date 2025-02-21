@@ -12,10 +12,10 @@ group = _group
 
 fun DependencyHandlerScope.applyDependencies() {
     // Dependencies
-    if (project.properties["com.voinearadu.utils.local"] != null) {
-        api(project(project.properties["com.voinearadu.utils.local"] as String))
+    if (project.properties["com.raduvoinea.utils.local"] != null) {
+        api(project(project.properties["com.raduvoinea.utils.local"] as String))
     } else {
-        api(libs.voinearadu.utils)
+        api(libs.raduvoinea.utils)
     }
 
     // Annotations
@@ -34,7 +34,7 @@ fun RepositoryHandler.applyRepositories() {
     mavenCentral()
     maven("https://maven.parchmentmc.org/")
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repository.voinearadu.com/repository/maven-releases/")
+    maven("https://repo.raduvoinea.com/repository/maven-releases/")
 }
 
 repositories {
@@ -76,12 +76,12 @@ subprojects {
         }
 
         repositories {
-            if (project.properties["com.voinearadu.publish"] == "true") {
-                maven(url = (project.findProperty("com.voinearadu.url") ?: "") as String) {
-                    name = "VoineaRaduRepository"
+            if (project.properties["com.raduvoinea.publish"] == "true") {
+                maven(url = (project.findProperty("com.raduvoinea.url") ?: "") as String) {
+                    name = "raduvoineaRepository"
                     credentials(PasswordCredentials::class) {
-                        username = (project.findProperty("com.voinearadu.auth.username") ?: "") as String
-                        password = (project.findProperty("com.voinearadu.auth.password") ?: "") as String
+                        username = (project.findProperty("com.raduvoinea.auth.username") ?: "") as String
+                        password = (project.findProperty("com.raduvoinea.auth.password") ?: "") as String
                     }
                 }
             }

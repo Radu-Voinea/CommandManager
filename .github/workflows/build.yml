@@ -56,7 +56,7 @@ jobs:
           commit_message: Incremented patch version
           commit_options: '--no-verify --signoff'
           commit_user_name: Voinea Radu
-          commit_user_email: contact@voinearadu.com
+          commit_user_email: contact@raduvoinea.com
 
       # ==================== BUILD ====================
 
@@ -64,11 +64,11 @@ jobs:
         run: |
           mkdir -p ~/.gradle
           echo "
-          com.voinearadu.url=https://repository.voinearadu.com/repository/maven-releases/
-          com.voinearadu.auth.username=admin
-          com.voinearadu.auth.password=${{ secrets.NEXUS_PASSWORD }}
+          com.raduvoinea.url=https://repo.raduvoinea.com/repository/maven-releases/
+          com.raduvoinea.auth.username=admin
+          com.raduvoinea.auth.password=${{ secrets.NEXUS_PASSWORD }}
           " > ~/.gradle/gradle.properties
-          if [ "${{ secrets.NEXUS_PASSWORD }}" == "" ]; then echo "com.voinearadu.publish=false" >> ~/.gradle/gradle.properties; fi
+          if [ "${{ secrets.NEXUS_PASSWORD }}" == "" ]; then echo "com.raduvoinea.publish=false" >> ~/.gradle/gradle.properties; fi
 
       - name: Cache Gradle Dependencies
         uses: actions/cache@v4

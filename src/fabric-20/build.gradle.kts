@@ -19,10 +19,10 @@ dependencies {
     api(project(":command-manager-common"))
 
     // Dependencies
-    if (project.properties["com.voinearadu.utils.local"] != null) {
-        api(project(project.properties["com.voinearadu.utils.local"] as String))
+    if (project.properties["com.raduvoinea.utils.local"] != null) {
+        api(project(project.properties["com.raduvoinea.utils.local"] as String))
     } else {
-        api(libs.voinearadu.utils)
+        api(libs.raduvoinea.utils)
     }
     api(libs.luckperms)
     modApi(libs.kyori.adventure.fabric)

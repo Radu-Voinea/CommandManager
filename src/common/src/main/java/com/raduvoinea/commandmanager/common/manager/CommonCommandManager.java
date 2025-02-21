@@ -1,11 +1,11 @@
-package com.voinearadu.commandmanager.common.manager;
+package com.raduvoinea.commandmanager.common.manager;
 
-import com.voinearadu.commandmanager.common.annotation.Command;
-import com.voinearadu.commandmanager.common.command.CommonCommand;
-import com.voinearadu.commandmanager.common.exception.CommandNotAnnotated;
-import com.voinearadu.commandmanager.common.utils.CommonPermissionUtils;
-import com.voinearadu.utils.logger.Logger;
-import com.voinearadu.utils.reflections.Reflections;
+import com.raduvoinea.commandmanager.common.annotation.Command;
+import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.exception.CommandNotAnnotated;
+import com.raduvoinea.commandmanager.common.utils.CommonPermissionUtils;
+import com.raduvoinea.utils.logger.Logger;
+import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

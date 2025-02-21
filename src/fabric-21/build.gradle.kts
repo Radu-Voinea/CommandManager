@@ -19,10 +19,10 @@ dependencies {
     api(project(":command-manager-common"))
 
     // Dependencies
-    if (project.properties["com.voinearadu.utils.local"] != null) {
-        api(project(project.properties["com.voinearadu.utils.local"] as String))
+    if (project.properties["com.raduvoinea.utils.local"] != null) {
+        api(project(project.properties["com.raduvoinea.utils.local"] as String))
     } else {
-        api(libs.voinearadu.utils)
+        api(libs.raduvoinea.utils)
     }
     api(libs.luckperms)
     modApi(libs.kyori.adventure.fabric)
@@ -40,16 +40,16 @@ dependencies {
 }
 
 tasks {
-    jar {
-        archiveFileName = "FabricCommandManager-$version.jar"
-    }
-
     processResources {
         inputs.property("version", version)
 
         filesMatching("fabric.mod.json") {
             expand("version" to version)
         }
+    }
+
+    jar {
+        archiveFileName = "FabricCommandManager-$version.jar"
     }
 
     remapJar {

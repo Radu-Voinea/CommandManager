@@ -1,6 +1,6 @@
-package com.voinearadu.commandmanager.common.annotation;
+package com.raduvoinea.commandmanager.common.annotation;
 
-import com.voinearadu.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.command.CommonCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

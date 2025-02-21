@@ -1,6 +1,6 @@
-package com.voinearadu.commandmanager.velocity.manager;
+package com.raduvoinea.commandmanager.velocity.manager;
 
-import com.voinearadu.commandmanager.common.manager.CommonMiniMessageManager;
+import com.raduvoinea.commandmanager.common.manager.CommonMiniMessageManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;

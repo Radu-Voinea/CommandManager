@@ -1,4 +1,4 @@
-package com.voinearadu.commandmanager.common.exception;
+package com.raduvoinea.commandmanager.common.exception;
 
 public class CommandNotAnnotated extends RuntimeException {
 
