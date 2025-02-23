@@ -1,14 +1,14 @@
 package com.raduvoinea.commandmanager.velocity.manager;
 
+import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
+import com.raduvoinea.commandmanager.velocity.command.VelocityCommand;
+import com.raduvoinea.utils.reflections.Reflections;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.raduvoinea.commandmanager.common.command.CommonCommand;
-import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
-import com.raduvoinea.commandmanager.velocity.command.VelocityCommand;
-import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,13 @@ public class VelocityCommandManager extends CommonCommandManager {
 
     private final ProxyServer proxy;
     private final VelocityMiniMessageManager miniMessageManager;
+    private final Object plugin;
 
-    public VelocityCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull String basePermission,
-                                  @NotNull ProxyServer proxy) {
+    public VelocityCommandManager(@NotNull Object plugin, @NotNull ProxyServer proxy,
+                                  @NotNull Reflections.Crawler reflectionsCrawler, @NotNull String basePermission) {
         super(reflectionsCrawler, Player.class, ConsoleCommandSource.class, CommandSource.class, basePermission);
 
+        this.plugin = plugin;
         this.proxy = proxy;
         this.miniMessageManager = new VelocityMiniMessageManager();
     }
@@ -32,10 +34,9 @@ public class VelocityCommandManager extends CommonCommandManager {
 
         com.velocitypowered.api.command.CommandManager commandManager = proxy.getCommandManager();
 
-
         CommandMeta commandMeta = commandManager.metaBuilder(command.getMainAlias())
                 .aliases(command.getAliases().subList(1, command.getAliases().size()).toArray(new String[0]))
-                .plugin(this.proxy)
+                .plugin(this.plugin)
                 .build();
 
 
