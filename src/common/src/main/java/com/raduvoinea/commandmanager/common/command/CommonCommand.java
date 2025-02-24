@@ -4,6 +4,7 @@ import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.exception.CommandNotAnnotated;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.utils.logger.Logger;
+import com.raduvoinea.utils.message_builder.GenericMessageBuilder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -175,6 +176,10 @@ public abstract class CommonCommand {
 
     public final List<String> getAliases() {
         return List.of(annotation.aliases());
+    }
+
+    protected final void sendMessage(Object target, GenericMessageBuilder<?> message) {
+        sendMessage(target, message.toString());
     }
 
     protected final void sendMessage(Object target, String message) {
