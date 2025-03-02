@@ -8,7 +8,6 @@ import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.fabric.manager.FabricCommandManager;
 import com.raduvoinea.utils.logger.Logger;
-import lombok.SneakyThrows;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,7 +16,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,7 +48,7 @@ public abstract class FabricCommand extends CommonCommand {
     @SuppressWarnings("SameReturnValue")
     private int internalExecute(@NotNull CommandContext<CommandSourceStack> context) {
         try {
-            CommandSource source = getSource(context);
+            CommandSourceStack source = context.getSource();
 
             List<String> arguments = this.getArguments().stream()
                     .map(argument -> {
@@ -65,20 +63,17 @@ public abstract class FabricCommand extends CommonCommand {
                     })
                     .toList();
 
-            execute(source, arguments);
+            if(source.isPlayer()){
+                execute(source.getPlayer(), arguments);
+            } else {
+                execute(source.getServer(), arguments);
+            }
+
         } catch (Throwable error) {
             Logger.error(error);
         }
 
         return 0;
-    }
-
-    @SuppressWarnings("JavaReflectionMemberAccess")
-    @SneakyThrows(value = {NoSuchFieldException.class, IllegalAccessException.class})
-    private CommandSource getSource(@NotNull CommandContext<CommandSourceStack> context) {
-        Field field = CommandSourceStack.class.getDeclaredField(commandSourceFiled);
-        field.setAccessible(true);
-        return (CommandSource) field.get(context.getSource());
     }
 
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
