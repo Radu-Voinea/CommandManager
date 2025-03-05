@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,10 @@ public abstract class CommonMiniMessageManager<NativeComponent> {
         return parse(message.parse());
     }
 
-    public @NotNull NativeComponent parse(@NotNull String message) {
+    public @NotNull NativeComponent parse(@Nullable String message) {
+        if (message == null) {
+            message = "null";
+        }
         return toNative(toComponent(message));
     }
 
