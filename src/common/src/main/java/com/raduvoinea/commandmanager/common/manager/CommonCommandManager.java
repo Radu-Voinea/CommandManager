@@ -3,7 +3,7 @@ package com.raduvoinea.commandmanager.common.manager;
 import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.exception.CommandNotAnnotated;
-import com.raduvoinea.commandmanager.common.utils.CommonPermissionUtils;
+import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
 import com.raduvoinea.utils.logger.Logger;
 import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
@@ -129,9 +129,9 @@ public abstract class CommonCommandManager {
             return true;
         }
         if (playerClass.isInstance(target)) {
-            return CommonPermissionUtils.checkPermission(playerClass, playerClass.cast(target), permission);
+            return LuckPermsUtils.checkPermission(playerClass, playerClass.cast(target), permission);
         }
-        return CommonPermissionUtils.checkPermission(playerClass, senderClass.cast(target), permission);
+        return LuckPermsUtils.checkPermission(playerClass, senderClass.cast(target), permission);
     }
 
     public abstract void sendMessage(Object target, String message);
