@@ -13,10 +13,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // TODO(low) Maybe Add minimum number of arguments and check for it
@@ -140,5 +137,14 @@ public abstract class VelocityCommand extends CommonCommand implements SimpleCom
         return commandManager.getProxy().getAllPlayers().stream()
                 .map(Player::getUsername)
                 .toList();
+    }
+
+    protected @Nullable Player getPlayer(String usernameOrUUID){
+        try{
+            UUID uuid = UUID.fromString(usernameOrUUID);
+            return commandManager.getProxy().getPlayer(uuid).orElse(null);
+        }catch (Exception e){
+            return commandManager.getProxy().getPlayer(usernameOrUUID).orElse(null);
+        }
     }
 }
