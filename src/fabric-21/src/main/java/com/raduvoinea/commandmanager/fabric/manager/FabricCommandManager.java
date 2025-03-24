@@ -4,6 +4,8 @@ import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.fabric.command.FabricCommand;
+import com.raduvoinea.utils.dependency_injection.Injector;
+import com.raduvoinea.utils.generic.dto.Holder;
 import com.raduvoinea.utils.logger.Logger;
 import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
@@ -20,8 +22,8 @@ public class FabricCommandManager extends CommonCommandManager {
     private final FabricMiniMessageManager miniMessageManager;
 
     public FabricCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull CommandManagerConfig config,
-                                @NotNull MinecraftServer server) {
-        super(reflectionsCrawler, ServerPlayer.class, MinecraftServer.class, CommandSource.class, config);
+                                @NotNull MinecraftServer server, @NotNull Holder<Injector> injector) {
+        super(reflectionsCrawler, ServerPlayer.class, MinecraftServer.class, CommandSource.class, config, injector);
 
         this.server = server;
         this.miniMessageManager = new FabricMiniMessageManager(server);

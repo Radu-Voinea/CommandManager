@@ -5,6 +5,8 @@ import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.exception.CommandNotAnnotated;
 import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
+import com.raduvoinea.utils.dependency_injection.Injector;
+import com.raduvoinea.utils.generic.dto.Holder;
 import com.raduvoinea.utils.logger.Logger;
 import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
@@ -25,15 +27,17 @@ public abstract class CommonCommandManager {
     private final Class<?> consoleClass;
     private final Class<?> senderClass;
     private final CommandManagerConfig config;
+    private final Holder<Injector> injectorHolder;
 
     public CommonCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull Class<?> playerClass,
                                 @NotNull Class<?> consoleClass, @NotNull Class<?> senderClass,
-                                @NotNull CommandManagerConfig config) {
+                                @NotNull CommandManagerConfig config, @NotNull Holder<Injector> injectorHolder) {
         this.reflectionsCrawler = reflectionsCrawler;
         this.playerClass = playerClass;
         this.consoleClass = consoleClass;
         this.senderClass = senderClass;
         this.config = config;
+        this.injectorHolder = injectorHolder;
     }
 
     public void register(@NotNull Class<? extends CommonCommand> commandClass) {
@@ -48,6 +52,9 @@ public abstract class CommonCommandManager {
             }
 
             CommonCommand command = commandClass.getConstructor(CommonCommandManager.class).newInstance(this);
+            if (!injectorHolder.isEmpty()) {
+                injectorHolder.value().inject(command);
+            }
             register(command);
         } catch (Throwable error) {
             // Do not print NotAnnotated error as errors, but was warnings. There are legitimate uses of it not being

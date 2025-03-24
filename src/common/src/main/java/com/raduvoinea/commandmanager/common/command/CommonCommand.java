@@ -35,7 +35,11 @@ public abstract class CommonCommand {
                 .filter(commandClass -> commandClass.getAnnotation(Command.class).parent().equals(this.getClass()))
                 .map(commandClass -> {
                     try {
-                        return commandClass.getConstructor(CommonCommandManager.class).newInstance(commandManager);
+                        CommonCommand command = commandClass.getConstructor(CommonCommandManager.class).newInstance(commandManager);
+                        if (!commandManager.getInjectorHolder().isEmpty()) {
+                            commandManager.getInjectorHolder().value().inject(command);
+                        }
+                        return command;
                     } catch (Exception error) {
                         Logger.error("There was an error while registering sub command " + commandClass.getName() + " for command(s) " + this.getAliases());
                         Logger.error(error);
