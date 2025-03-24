@@ -1,6 +1,7 @@
 package com.raduvoinea.commandmanager.fabric.manager;
 
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.fabric.command.FabricCommand;
 import com.raduvoinea.utils.logger.Logger;
@@ -18,9 +19,9 @@ public class FabricCommandManager extends CommonCommandManager {
     private final MinecraftServer server;
     private final FabricMiniMessageManager miniMessageManager;
 
-    public FabricCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull String basePermission,
+    public FabricCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull CommandManagerConfig config,
                                 @NotNull MinecraftServer server) {
-        super(reflectionsCrawler, ServerPlayer.class, MinecraftServer.class, CommandSource.class, basePermission);
+        super(reflectionsCrawler, ServerPlayer.class, MinecraftServer.class, CommandSource.class, config);
 
         this.server = server;
         this.miniMessageManager = new FabricMiniMessageManager(server);
@@ -57,13 +58,6 @@ public class FabricCommandManager extends CommonCommandManager {
         }
 
         Logger.error("Unknown target type: " + target.getClass().getName());
-    }
-
-    @Override
-    public void broadcastMessage(String message) {
-        server.getPlayerList().getPlayers().forEach(player ->
-                player.sendSystemMessage(miniMessageManager.parse(message))
-        );
     }
 
 }

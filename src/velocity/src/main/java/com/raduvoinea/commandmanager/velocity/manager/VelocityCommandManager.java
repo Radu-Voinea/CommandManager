@@ -1,6 +1,7 @@
 package com.raduvoinea.commandmanager.velocity.manager;
 
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.velocity.command.VelocityCommand;
 import com.raduvoinea.utils.reflections.Reflections;
@@ -20,8 +21,8 @@ public class VelocityCommandManager extends CommonCommandManager {
     private final Object plugin;
 
     public VelocityCommandManager(@NotNull Object plugin, @NotNull ProxyServer proxy,
-                                  @NotNull Reflections.Crawler reflectionsCrawler, @NotNull String basePermission) {
-        super(reflectionsCrawler, Player.class, ConsoleCommandSource.class, CommandSource.class, basePermission);
+                                  @NotNull Reflections.Crawler reflectionsCrawler, @NotNull CommandManagerConfig config) {
+        super(reflectionsCrawler, Player.class, ConsoleCommandSource.class, CommandSource.class, config);
 
         this.plugin = plugin;
         this.proxy = proxy;
@@ -47,11 +48,6 @@ public class VelocityCommandManager extends CommonCommandManager {
     public final void sendMessage(Object user, String message) {
         CommandSource source = (CommandSource) user;
         source.sendMessage(miniMessageManager.parse(message));
-    }
-
-    @Override
-    public void broadcastMessage(String message) {
-        proxy.sendMessage(miniMessageManager.parse(message));
     }
 
 }

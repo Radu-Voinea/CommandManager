@@ -2,6 +2,7 @@ package com.raduvoinea.commandmanager.common.manager;
 
 import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
+import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.exception.CommandNotAnnotated;
 import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
 import com.raduvoinea.utils.logger.Logger;
@@ -15,24 +16,24 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@Getter
 public abstract class CommonCommandManager {
 
-    private final @Getter Reflections.Crawler reflectionsCrawler;
+    private final Reflections.Crawler reflectionsCrawler;
     private final List<CommonCommand> commands = new ArrayList<>();
-    private final @Getter Class<?> playerClass;
-    private final @Getter Class<?> consoleClass;
-    private final @Getter Class<?> senderClass;
-    private final @Getter String basePermission;
+    private final Class<?> playerClass;
+    private final Class<?> consoleClass;
+    private final Class<?> senderClass;
+    private final CommandManagerConfig config;
 
     public CommonCommandManager(@NotNull Reflections.Crawler reflectionsCrawler, @NotNull Class<?> playerClass,
                                 @NotNull Class<?> consoleClass, @NotNull Class<?> senderClass,
-                                @NotNull String basePermission) {
+                                @NotNull CommandManagerConfig config) {
         this.reflectionsCrawler = reflectionsCrawler;
         this.playerClass = playerClass;
         this.consoleClass = consoleClass;
         this.senderClass = senderClass;
-        this.basePermission = basePermission;
+        this.config = config;
     }
 
     public void register(@NotNull Class<? extends CommonCommand> commandClass) {
@@ -51,12 +52,12 @@ public abstract class CommonCommandManager {
         } catch (Throwable error) {
             // Do not print NotAnnotated error as errors, but was warnings. There are legitimate uses of it not being
             // annotated, but it might also be an oversight that needs to be addressed.
-            if (error instanceof CommandNotAnnotated) { //NOPMD - suppressed AvoidInstanceofChecksInCatchClause
+            if (error instanceof CommandNotAnnotated) {
                 Logger.warn(error.getMessage());
                 return;
             }
 
-            if (error instanceof InvocationTargetException invocationError) { //NOPMD - suppressed AvoidInstanceofChecksInCatchClause
+            if (error instanceof InvocationTargetException invocationError) {
                 if (invocationError.getTargetException() instanceof CommandNotAnnotated) {
                     Logger.warn(invocationError.getTargetException().getMessage());
                     return;
@@ -74,55 +75,21 @@ public abstract class CommonCommandManager {
         platformRegister(command);
     }
 
-
-    public void enable(@NotNull Class<? extends CommonCommand> commandClass) {
-        Command commandAnnotation = commandClass.getAnnotation(Command.class);
-        if (commandAnnotation != null && commandAnnotation.parent() != CommonCommand.class) {
-            return;
-        }
-
-        CommonCommand command = getCommand(commandClass);
-
-        if (command != null) {
-            command.enable();
-        } else {
-            Logger.error("Command " + commandClass.getName() + " is not registered.");
-        }
-    }
-
-    public void disable(@NotNull Class<? extends CommonCommand> commandClass) {
-        Command commandAnnotation = commandClass.getAnnotation(Command.class);
-        if (commandAnnotation != null && commandAnnotation.parent() != CommonCommand.class) {
-            return;
-        }
-
-        CommonCommand command = getCommand(commandClass);
-
-        if (command != null) {
-            command.disable();
-        } else {
-            Logger.error("Command " + commandClass.getName() + " is not registered.");
-        }
-    }
-
     public @Nullable CommonCommand getCommand(@NotNull Class<? extends CommonCommand> commandClass) {
-        CommonCommand rootCommand = commands.stream()
-                .filter(commandHolder -> commandHolder.getClass().equals(commandClass))
-                .findFirst()
-                .orElse(null);
+        for (CommonCommand command : commands) {
+            if (command.getClass().equals(commandClass)) {
+                return command;
+            }
 
-        if (rootCommand != null) {
-            return rootCommand;
+            for (CommonCommand subCommand : command.getPrimitiveSubCommands()) {
+                if (subCommand.getClass().equals(commandClass)) {
+                    return subCommand;
+                }
+            }
         }
 
-        return commands.stream()
-                .filter(commandHolder -> commandHolder.getPrimitiveSubCommands().stream()
-                        .anyMatch(subCommand -> subCommand.getClass().equals(commandClass)))
-                .findFirst()
-                .orElse(null);
+        return null;
     }
-
-    protected abstract void platformRegister(@NotNull CommonCommand command);
 
     public boolean checkPermission(Object target, String permission) {
         if (consoleClass.isInstance(target)) {
@@ -134,8 +101,8 @@ public abstract class CommonCommandManager {
         return LuckPermsUtils.checkPermission(playerClass, senderClass.cast(target), permission);
     }
 
-    public abstract void sendMessage(Object target, String message);
+    protected abstract void platformRegister(@NotNull CommonCommand command);
 
-    public abstract void broadcastMessage(String message);
+    public abstract void sendMessage(Object target, String message);
 
 }

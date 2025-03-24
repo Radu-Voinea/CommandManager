@@ -8,10 +8,9 @@ import com.raduvoinea.utils.message_builder.GenericMessageBuilder;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -20,8 +19,7 @@ public abstract class CommonCommand {
     // Provided
     private final CommonCommandManager commandManager;
     private final @Getter Command annotation;
-    private final Set<CommonCommand> subCommands = new HashSet<>();
-    private boolean enabled = true;
+    private final List<CommonCommand> subCommands;
 
     public CommonCommand(CommonCommandManager commandManager) throws CommandNotAnnotated {
         this.commandManager = commandManager;
@@ -31,12 +29,11 @@ public abstract class CommonCommand {
 
         this.annotation = this.getClass().getAnnotation(Command.class);
 
-        subCommands.addAll(commandManager.getReflectionsCrawler().getOfType(CommonCommand.class)
+        subCommands = commandManager.getReflectionsCrawler().getOfType(CommonCommand.class)
                 .stream()
                 .filter(commandClass -> commandClass.isAnnotationPresent(Command.class))
                 .filter(commandClass -> commandClass.getAnnotation(Command.class).parent().equals(this.getClass()))
-                .collect(Collectors.toSet())
-                .stream().map(commandClass -> {
+                .map(commandClass -> {
                     try {
                         return commandClass.getConstructor(CommonCommandManager.class).newInstance(commandManager);
                     } catch (Exception error) {
@@ -46,52 +43,65 @@ public abstract class CommonCommand {
                     }
                 })
                 .filter(Objects::nonNull)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList());
     }
 
-    public void enable() {
-        if (annotation.parent() == CommonCommand.class) {
-            Logger.log("Enabling command(s): " + this.getAliases());
-        } else {
-            CommonCommand parentCommand = commandManager.getCommand(annotation.parent());
+    private String getFullCommand() {
+        String parentFullCommand = "";
 
-            if (parentCommand == null) {
-                throw new RuntimeException("Parent command " + annotation.parent().getName() + " of subcommand " + this.getAliases() + " is not registered.");
+        if (!isRootCommand()) {
+            CommonCommand parent = commandManager.getCommand(getParent());
+
+            if (parent == null) {
+                Logger.error("Command " + getParent().getName() + " is not registered.");
+                return "Registration Error";
             }
 
-            Logger.log("Enabling subcommand(s) of " + parentCommand.getAliases() + ": " + this.getAliases());
+            parentFullCommand = parent.getFullCommand() + " ";
         }
 
-        this.enabled = true;
-        for (CommonCommand subCommand : this.getPrimitiveSubCommands()) {
-            subCommand.enable();
-        }
+        return parentFullCommand + this.getMainAlias();
     }
 
-    public void disable() {
-        if (annotation.parent() == CommonCommand.class) {
-            Logger.log("Disabling command(s): " + this.getAliases());
-        } else {
-            CommonCommand parentCommand = commandManager.getCommand(annotation.parent());
+    private String getSimpleUsage() {
+        return commandManager.getConfig().simpleUsage
+                .parse("command", this.getFullCommand())
+                .parse("arguments", String.join(" ",
+                        getArguments().stream()
+                                .map(arg -> "<" + arg + ">")
+                                .toList()
+                ))
+                .parse();
+    }
 
-            if (parentCommand == null) {
-                throw new RuntimeException("Parent command " + annotation.parent().getName() + " of subcommand " + this.getAliases() + " is not registered.");
-            }
+    private List<String> getFullCommandAndSubCommands() {
+        List<String> lines = new ArrayList<>();
+        lines.add(this.getSimpleUsage());
 
-            Logger.log("Enabling subcommand(s) of " + parentCommand.getAliases() + ": " + this.getAliases());
+        for (CommonCommand subCommand : subCommands) {
+            lines.addAll(subCommand.getFullCommandAndSubCommands());
         }
 
-        this.enabled = false;
-        for (CommonCommand subCommand : this.getPrimitiveSubCommands()) {
-            subCommand.disable();
+        lines.sort(String::compareTo);
+
+        return lines;
+    }
+
+    public String getUsage() {
+        List<String> subcommands = getFullCommandAndSubCommands();
+        subcommands = subcommands.subList(1, subcommands.size());
+
+        if(subcommands.isEmpty()){
+            return getSimpleUsage();
         }
+
+        return commandManager.getConfig().complexUsage
+                .parse("simple_usage", getSimpleUsage())
+                .parse("sub_commands", String.join("\n", subcommands))
+                .parse();
     }
 
     public void execute(@NotNull Object executor, @NotNull List<String> arguments) {
-        if (!enabled) {
-            return;
-        }
-
         if (!commandManager.checkPermission(executor, getPermission())) {
             commandManager.sendMessage(executor, "You don't have permission to execute this command.");
             return;
@@ -108,6 +118,11 @@ public abstract class CommonCommand {
                 subCommand.execute(executor, arguments.subList(1, arguments.size()));
                 return;
             }
+        }
+
+        if (arguments.size() < this.getArguments().size()) {
+            sendMessage(executor, getUsage());
+            return;
         }
 
         if (annotation.onlyFor().equals(Command.OnlyFor.PLAYERS)) {
@@ -144,30 +159,33 @@ public abstract class CommonCommand {
     protected abstract void internalExecuteCommon(@NotNull Object sender, @NotNull List<String> arguments);
 
     public @NotNull String getPermission() {
-        Class<? extends CommonCommand> parentClass = annotation.parent();
-
-        if (parentClass.equals(CommonCommand.class)) {
-            return commandManager.getBasePermission() + "." + annotation.aliases()[0];
+        if (isRootCommand()) {
+            return commandManager.getConfig().basePermission + "." + annotation.aliases()[0];
         }
 
-        CommonCommand command = commandManager.getCommand(parentClass);
+        CommonCommand command = commandManager.getCommand(getParent());
 
         if (command == null) {
-            throw new RuntimeException("Command " + parentClass.getName() + " is not registered.");
+            throw new RuntimeException("Command " + getParent().getName() + " is not registered.");
         }
 
         return command.getPermission() + "." + annotation.aliases()[0];
     }
 
-    public final @NotNull Set<CommonCommand> getPrimitiveSubCommands() {
-        Set<CommonCommand> subCommands = new HashSet<>();
+    public final @NotNull List<CommonCommand> getPrimitiveSubCommands() {
+        return this.subCommands;
+    }
 
-        for (CommonCommand subCommand : this.subCommands) {
-            subCommands.add(subCommand);
-            subCommands.addAll(subCommand.getPrimitiveSubCommands());
-        }
+    public List<String> getArguments() {
+        return List.of(annotation.arguments());
+    }
 
-        return subCommands;
+    public Class<? extends CommonCommand> getParent() {
+        return annotation.parent();
+    }
+
+    public boolean isRootCommand() {
+        return getParent().equals(CommonCommand.class);
     }
 
     public final String getMainAlias() {
@@ -186,14 +204,8 @@ public abstract class CommonCommand {
         commandManager.sendMessage(target, message);
     }
 
-    protected final void broadcastMessage(String message) {
-        commandManager.broadcastMessage(message);
-    }
-
-
     protected final boolean checkPermission(Object target, String permission) {
         return commandManager.checkPermission(target, permission);
     }
-
 
 }

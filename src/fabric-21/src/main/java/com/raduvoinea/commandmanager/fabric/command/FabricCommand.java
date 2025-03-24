@@ -41,10 +41,6 @@ public abstract class FabricCommand extends CommonCommand {
                 .collect(Collectors.toSet());
     }
 
-    protected @NotNull List<String> getArguments() {
-        return new ArrayList<>();
-    }
-
     @SuppressWarnings("SameReturnValue")
     private int internalExecute(@NotNull CommandContext<CommandSourceStack> context) {
         try {
@@ -63,7 +59,7 @@ public abstract class FabricCommand extends CommonCommand {
                     })
                     .toList();
 
-            if(source.isPlayer()){
+            if (source.isPlayer()) {
                 execute(source.getPlayer(), arguments);
             } else {
                 execute(source.getServer(), arguments);

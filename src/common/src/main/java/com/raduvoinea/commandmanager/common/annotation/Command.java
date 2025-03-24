@@ -13,6 +13,8 @@ public @interface Command {
 
     String[] aliases();
 
+    String[] arguments() default {};
+
     OnlyFor onlyFor() default OnlyFor.BOTH;
 
     Class<? extends CommonCommand> parent() default CommonCommand.class;

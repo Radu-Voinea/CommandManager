@@ -139,11 +139,11 @@ public abstract class VelocityCommand extends CommonCommand implements SimpleCom
                 .toList();
     }
 
-    protected @Nullable Player getPlayer(String usernameOrUUID){
-        try{
+    protected @Nullable Player getPlayer(String usernameOrUUID) {
+        try {
             UUID uuid = UUID.fromString(usernameOrUUID);
             return commandManager.getProxy().getPlayer(uuid).orElse(null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return commandManager.getProxy().getPlayer(usernameOrUUID).orElse(null);
         }
     }
