@@ -1,5 +1,6 @@
 package com.raduvoinea.commandmanager.fabric.command;
 
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -51,6 +52,7 @@ public abstract class FabricCommand extends CommonCommand {
                         if (argument.startsWith("?")) {
                             argument = argument.substring(1);
                         }
+
                         try {
                             return context.getArgument(argument, String.class);
                         } catch (IllegalArgumentException e) {
@@ -88,11 +90,14 @@ public abstract class FabricCommand extends CommonCommand {
             if (argument.startsWith("?")) {
                 argument = argument.substring(1);
             }
+            ArgumentType<String> argumentType = StringArgumentType.string();
+            if (argument.endsWith("...")) {
+                argumentType = StringArgumentType.greedyString();
+            }
 
             String finalArgument = argument;
-
             arguments.add(Commands
-                    .argument(argument, StringArgumentType.string())
+                    .argument(argument, argumentType)
                     .suggests((context, builder) -> {
                                 for (String suggestionString : onAutoComplete(finalArgument, context)) {
                                     builder.suggest(suggestionString);
