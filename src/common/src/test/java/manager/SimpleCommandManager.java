@@ -12,18 +12,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class SimpleCommandManager extends CommonCommandManager {
 
-    public SimpleCommandManager(Reflections.@NotNull Crawler reflectionsCrawler, @NotNull CommandManagerConfig config) {
-        super(reflectionsCrawler, SimplePlayer.class, SimpleConsole.class, CommandSender.class, config, Holder.empty());
-    }
+	public SimpleCommandManager(Reflections.@NotNull Crawler reflectionsCrawler, @NotNull CommandManagerConfig config) {
+		super(reflectionsCrawler, SimplePlayer.class, SimpleConsole.class, CommandSender.class, config, Holder.empty());
+	}
 
-    @Override
-    protected void platformRegister(@NotNull CommonCommand command) {
+	@Override
+	protected void platformRegister(@NotNull CommonCommand command) {
 
-    }
+	}
 
-    @Override
-    public void sendMessage(Object target, String message) {
-        ((CommandSender) target).sendMessage(message);
-    }
+	@Override
+	public void sendMessage(Object target, String message) {
+		((CommandSender) target).sendMessage(message);
+	}
 
 }

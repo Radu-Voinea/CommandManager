@@ -10,11 +10,11 @@ import java.util.List;
 @NoArgsConstructor
 public class SimplePlayer implements CommandSender {
 
-    private final List<String> messages = new ArrayList<>();
+	private final List<String> messages = new ArrayList<>();
 
-    @Override
-    public void sendMessage(String message) {
-        messages.add(message);
-    }
+	@Override
+	public void sendMessage(String message) {
+		messages.add(message);
+	}
 
 }

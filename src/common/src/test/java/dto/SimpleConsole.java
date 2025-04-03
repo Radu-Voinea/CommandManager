@@ -8,13 +8,13 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class SimpleConsole implements CommandSender{
+public class SimpleConsole implements CommandSender {
 
-    private final List<String> messages = new ArrayList<>();
+	private final List<String> messages = new ArrayList<>();
 
-    @Override
-    public void sendMessage(String message) {
-        messages.add(message);
-    }
+	@Override
+	public void sendMessage(String message) {
+		messages.add(message);
+	}
 
 }

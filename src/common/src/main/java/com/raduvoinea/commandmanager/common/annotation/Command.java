@@ -11,17 +11,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Command {
 
-    String[] aliases();
+	String[] aliases();
 
-    String[] arguments() default {};
+	String[] arguments() default {};
 
-    OnlyFor onlyFor() default OnlyFor.BOTH;
+	OnlyFor onlyFor() default OnlyFor.BOTH;
 
-    Class<? extends CommonCommand> parent() default CommonCommand.class;
+	Class<? extends CommonCommand> parent() default CommonCommand.class;
 
-    enum OnlyFor {
-        PLAYERS,
-        CONSOLE,
-        BOTH
-    }
+	enum OnlyFor {
+		PLAYERS,
+		CONSOLE,
+		BOTH
+	}
 }

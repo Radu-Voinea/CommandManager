@@ -11,25 +11,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class FabricMiniMessageManager extends CommonMiniMessageManager<Component> {
 
-    private final FabricAudiences audiences;
+	private final FabricAudiences audiences;
 
-    public FabricMiniMessageManager(MinecraftServer server) {
-        this.audiences = FabricServerAudiences.of(server);
-    }
+	public FabricMiniMessageManager(MinecraftServer server) {
+		this.audiences = FabricServerAudiences.of(server);
+	}
 
-    @SuppressWarnings("unused")
-    public FabricMiniMessageManager(FabricAudiences audiences) {
-        this.audiences = audiences;
-    }
+	@SuppressWarnings("unused")
+	public FabricMiniMessageManager(FabricAudiences audiences) {
+		this.audiences = audiences;
+	}
 
-    @Override
-    public @NotNull Component toNative(@NotNull net.kyori.adventure.text.Component component) {
-        return audiences.toNative(component);
-    }
+	@Override
+	public @NotNull Component toNative(@NotNull net.kyori.adventure.text.Component component) {
+		return audiences.toNative(component);
+	}
 
-    @Override
-    public @NotNull String sanitize(net.kyori.adventure.text.Component component) {
-        TextComponent textComponent = (TextComponent) component;
-        return textComponent.content();
-    }
+	@Override
+	public @NotNull String sanitize(net.kyori.adventure.text.Component component) {
+		TextComponent textComponent = (TextComponent) component;
+		return textComponent.content();
+	}
 }
