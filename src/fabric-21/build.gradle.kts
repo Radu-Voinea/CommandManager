@@ -1,28 +1,28 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id(libs.plugins.loom.v21.get().pluginId) version libs.plugins.loom.v21.get().version.toString()
+    alias(libs.plugins.fabric.loom)
 }
 
 dependencies {
     // Minecraft
-    minecraft(libs.minecraft.v21)
+    minecraft(libs.minecraft)
     mappings(loom.layered {
         officialMojangMappings()
-        parchment(libs.parchment.mappings.v21)
+        parchment(libs.parchment)
     })
 
-    modCompileOnly(libs.fabric.loader.v21)
-    modCompileOnly(libs.fabric.api.v21)
+    modCompileOnly(libs.fabric.loader)
+    modCompileOnly(libs.fabric.api)
 
     // Project
     api(project(":command-manager-common"))
 
     // Dependencies
-    if (project.properties["com.voinearadu.utils.local"] != null) {
-        api(project(project.properties["com.voinearadu.utils.local"] as String))
+    if (project.properties["com.raduvoinea.utils.local"] != null) {
+        api(project(project.properties["com.raduvoinea.utils.local"] as String))
     } else {
-        api(libs.voinearadu.utils)
+        api(libs.raduvoinea.utils)
     }
     api(libs.luckperms)
     modApi(libs.kyori.adventure.fabric)
@@ -40,16 +40,16 @@ dependencies {
 }
 
 tasks {
-    jar {
-        archiveFileName = "FabricCommandManager-$version.jar"
-    }
-
     processResources {
         inputs.property("version", version)
 
         filesMatching("fabric.mod.json") {
             expand("version" to version)
         }
+    }
+
+    jar {
+        archiveFileName = "FabricCommandManager-$version.jar"
     }
 
     remapJar {
