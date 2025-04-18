@@ -6,13 +6,12 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.NodeType;
-import net.luckperms.api.node.types.ChatMetaNode;
 import net.luckperms.api.platform.PlayerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.OptionalInt;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -69,56 +68,32 @@ public class LuckPermsUtils {
 		return group;
 	}
 
-	public static String getPrefix(@Nullable User user, @Nullable Group group) {
-		return getNodeType(user, group, NodeType.PREFIX);
-	}
-
-	public static String getSuffix(@Nullable User user, @Nullable Group group) {
-		return getNodeType(user, group, NodeType.SUFFIX);
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T extends ChatMetaNode> String getNodeType(@Nullable User user, @Nullable Group group,
-	                                                          NodeType<?> nodeType) {
-		List<T> userPrefixNodes = new ArrayList<>();
-		List<T> groupPrefixNodes = new ArrayList<>();
-
-		if (user != null) {
-			userPrefixNodes = (List<T>) new ArrayList<>(user.getNodes(nodeType).stream().toList());
-		}
-		if (group != null) {
-			groupPrefixNodes = (List<T>) new ArrayList<>(group.getNodes(nodeType).stream().toList());
-		}
-
-		List<T> prefixNodes = new ArrayList<>();
-		prefixNodes.addAll(userPrefixNodes);
-		prefixNodes.addAll(groupPrefixNodes);
-
-		prefixNodes.sort(Comparator.comparingInt(ChatMetaNode::getPriority));
-		T prefix = prefixNodes.stream().findFirst().orElse(null);
-
-		String prefixString = prefix == null ? "" : prefix.getKey();
-		if (prefixString.contains(".")) {
-			String[] split = prefixString.split("\\.");
-			prefixString = split[split.length - 1];
-		}
-
-		return prefixString;
-	}
-
-
 	public static String getPrefix(@NotNull UUID uuid) {
 		User user = getUser(uuid);
-		Group group = getGroup(user);
 
-		return getPrefix(user, group);
+		return getPrefix(user);
+	}
+
+	public static String getPrefix(@Nullable User user) {
+		if (user == null) {
+			return "";
+		}
+
+		return user.getCachedData().getMetaData().getPrefix();
 	}
 
 	public static String getSuffix(@NotNull UUID uuid) {
 		User user = getUser(uuid);
-		Group group = getGroup(user);
 
-		return getSuffix(user, group);
+		return getSuffix(user);
+	}
+
+	public static String getSuffix(@Nullable User user) {
+		if (user == null) {
+			return "";
+		}
+
+		return user.getCachedData().getMetaData().getSuffix();
 	}
 
 	@SneakyThrows(value = {InterruptedException.class, ExecutionException.class})
