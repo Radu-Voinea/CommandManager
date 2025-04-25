@@ -4,25 +4,15 @@ version = "1.1.9"
 group = "com.raduvoinea"
 
 [plugins]
-
-loom_v20 = { id = "fabric-loom", version = "1.5.5" }
-loom_v21 = { id = "fabric-loom", version = "1.8.12" }
+fabric_loom = { id = "fabric-loom", version = "1.8.12" }
+jetbrin_gradle_plugin_idea_ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.8" }
 
 [libraries]
-
-# Minecraft
-
-# Fabric 1.20
-minecraft_v20 = { module = "com.mojang:minecraft", version = "1.20.1" }
-fabric_api_v20 = { module = "net.fabricmc.fabric-api:fabric-api", version = "0.90.7+1.20.3" }
-fabric_loader_v20 = { module = "net.fabricmc:fabric-loader", version = "0.15.10" }
-parchment_mappings_v20 = { module = "org.parchmentmc.data:parchment-1.20.1", version = "2023.09.03" }
-
-# Fabric 1.21
-minecraft_v21 = { module = "com.mojang:minecraft", version = "1.21.1" }
-fabric_api_v21 = { module = "net.fabricmc.fabric-api:fabric-api", version = "0.109.0+1.21.1" }
-fabric_loader_v21 = { module = "net.fabricmc:fabric-loader", version = "0.16.9" }
-parchment_mappings_v21 = { module = "org.parchmentmc.data:parchment-1.21", version = "2024.11.10" }
+# Fabric
+minecraft = { module = "com.mojang:minecraft", version = "1.21.1" }
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version = "0.109.0+1.21.1" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version = "0.16.9" }
+parchment = { module = "org.parchmentmc.data:parchment-1.21", version = "2024.11.10" }
 
 # Velocioty
 velocity = { module = "com.velocitypowered:velocity-api", version = "3.4.0-SNAPSHOT" }
