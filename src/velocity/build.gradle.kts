@@ -1,7 +1,7 @@
 @file:Suppress("VulnerableLibrariesLocal")
 
 plugins{
-    id("org.jetbrains.gradle.plugin.idea-ext")
+    alias(libs.plugins.jetbrin.gradle.plugin.idea.ext)
 }
 
 dependencies {
