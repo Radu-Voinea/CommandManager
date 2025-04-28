@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
+import com.raduvoinea.commandmanager.common.utils.ListUtils;
 import com.raduvoinea.commandmanager.fabric.manager.FabricCommandManager;
 import com.raduvoinea.utils.logger.Logger;
 import net.minecraft.commands.CommandSource;
@@ -99,8 +100,11 @@ public abstract class FabricCommand extends CommonCommand {
 			arguments.add(Commands
 					.argument(argument, argumentType)
 					.suggests((context, builder) -> {
-								for (String suggestionString : onAutoComplete(finalArgument, context)) {
-									builder.suggest(suggestionString);
+								String argumentValue = context.getArgument(finalArgument, String.class);
+								List<String> suggestions = ListUtils.getListThatStartsWith(onAutoComplete(finalArgument, context), argumentValue);
+
+								for (String suggestion : suggestions) {
+									builder.suggest(suggestion);
 								}
 
 								return builder.buildFuture();
