@@ -41,8 +41,11 @@ public abstract class CommonCommandManager {
 	}
 
 	public void register(@NotNull Class<? extends CommonCommand> commandClass) {
+		register(commandClass.getAnnotation(Command.class), commandClass);
+	}
+
+	public void register(Command commandAnnotation, @NotNull Class<? extends CommonCommand> commandClass) {
 		try {
-			Command commandAnnotation = commandClass.getAnnotation(Command.class);
 			if (commandAnnotation != null && commandAnnotation.parent() != CommonCommand.class) {
 				return;
 			}
