@@ -10,12 +10,12 @@ import java.util.List;
 
 @Command(aliases = "sub1", arguments = {"s1", "s2"}, parent = BaseCommand.class)
 public class SubCommand1 extends SimpleCommand {
-    public SubCommand1(CommonCommandManager commandManager) throws CommandNotAnnotated {
-        super(commandManager);
-    }
+	public SubCommand1(CommonCommandManager commandManager) throws CommandNotAnnotated {
+		super(commandManager);
+	}
 
-    @Override
-    protected void execute(CommandSender sender, List<String> arguments) {
+	@Override
+	protected void execute(CommandSender sender, List<String> arguments) {
 
-    }
+	}
 }

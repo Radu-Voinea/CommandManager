@@ -4,10 +4,10 @@
 
 ## Fabric versioning
 
-| Minecraft version | Fabric version | command-manager-fabric vebric |
-|-------------------|----------------|-------------------------------|
-| 1.20.1            | 0.15.10        | [1.0.0 - 1.0.6]               |
-| 1.21.1            | 0.16.9         | [1.1.0 - ]                    |
+| Minecraft version | Fabric version | command-manager-fabric version |
+|-------------------|----------------|--------------------------------|
+| 1.20.1            | 0.15.10        | [1.0.0 - 1.0.6]                |
+| 1.21.1            | 0.16.9         | [1.1.0 - ]                     |
 
 ```kotlin
 repositories {

@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
+import com.raduvoinea.commandmanager.common.utils.ListUtils;
 import com.raduvoinea.commandmanager.fabric.manager.FabricCommandManager;
 import com.raduvoinea.utils.logger.Logger;
 import net.minecraft.commands.CommandSource;
@@ -28,148 +29,161 @@ import static net.minecraft.commands.Commands.literal;
 @SuppressWarnings("unused")
 public abstract class FabricCommand extends CommonCommand {
 
-    public static final String commandSourceFiled = "field_9819";
-    private final FabricCommandManager commandManager;
+	public static final String commandSourceFiled = "field_9819";
+	private final FabricCommandManager commandManager;
 
-    public FabricCommand(CommonCommandManager commandManager) {
-        super(commandManager);
-        this.commandManager = (FabricCommandManager) commandManager;
-    }
+	public FabricCommand(CommonCommandManager commandManager) {
+		super(commandManager);
+		this.commandManager = (FabricCommandManager) commandManager;
+	}
 
-    public @NotNull Set<FabricCommand> getSubCommands() {
-        return getPrimitiveSubCommands()
-                .stream().map(command -> (FabricCommand) command)
-                .collect(Collectors.toSet());
-    }
+	public @NotNull Set<FabricCommand> getSubCommands() {
+		return getPrimitiveSubCommands()
+				.stream().map(command -> (FabricCommand) command)
+				.collect(Collectors.toSet());
+	}
 
-    @SuppressWarnings("SameReturnValue")
-    private int internalExecute(@NotNull CommandContext<CommandSourceStack> context) {
-        try {
-            CommandSourceStack source = context.getSource();
+	@SuppressWarnings("SameReturnValue")
+	private int internalExecute(@NotNull CommandContext<CommandSourceStack> context) {
+		try {
+			CommandSourceStack source = context.getSource();
 
-            List<String> arguments = this.getArguments().stream()
-                    .map(argument -> {
-                        if (argument.startsWith("?")) {
-                            argument = argument.substring(1);
-                        }
+			List<String> arguments = this.getArguments().stream()
+					.map(argument -> {
+						if (argument.startsWith("?")) {
+							argument = argument.substring(1);
+						}
 
-                        try {
-                            return context.getArgument(argument, String.class);
-                        } catch (IllegalArgumentException e) {
-                            return null;
-                        }
-                    })
-                    .toList();
+						try {
+							return context.getArgument(argument, String.class);
+						} catch (IllegalArgumentException e) {
+							return null;
+						}
+					})
+					.toList();
 
-            if (source.isPlayer()) {
-                execute(source.getPlayer(), arguments);
-            } else {
-                execute(source.getServer(), arguments);
-            }
+			if (source.isPlayer()) {
+				execute(source.getPlayer(), arguments);
+			} else {
+				execute(source.getServer(), arguments);
+			}
 
-        } catch (Throwable error) {
-            Logger.error(error);
-        }
+		} catch (Throwable error) {
+			Logger.error(error);
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
-        LiteralArgumentBuilder<CommandSourceStack> command = literal(alias);
+	public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
+		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias);
 
-        for (FabricCommand subCommand : getSubCommands()) {
-            Logger.log("Registering subcommand(s): " + subCommand.getAliases() + " for " + alias);
-            for (String subAlias : subCommand.getAliases()) {
-                command = command.then(subCommand.getCommandBuilder(subAlias));
-            }
-        }
+		for (FabricCommand subCommand : getSubCommands()) {
+			Logger.log("Registering subcommand(s): " + subCommand.getAliases() + " for " + alias);
+			for (String subAlias : subCommand.getAliases()) {
+				command = command.then(subCommand.getCommandBuilder(subAlias));
+			}
+		}
 
-        List<ArgumentBuilder<CommandSourceStack, ?>> arguments = new ArrayList<>();
+		List<ArgumentBuilder<CommandSourceStack, ?>> arguments = new ArrayList<>();
 
-        for (String argument : getArguments()) {
-            if (argument.startsWith("?")) {
-                argument = argument.substring(1);
-            }
-            ArgumentType<String> argumentType = StringArgumentType.string();
-            if (argument.endsWith("...")) {
-                argumentType = StringArgumentType.greedyString();
-            }
+		for (String argument : getArguments()) {
+			ArgumentType<String> argumentType = StringArgumentType.string();
 
-            String finalArgument = argument;
-            arguments.add(Commands
-                    .argument(argument, argumentType)
-                    .suggests((context, builder) -> {
-                                for (String suggestionString : onAutoComplete(finalArgument, context)) {
-                                    builder.suggest(suggestionString);
-                                }
+			if (argument.startsWith("?")) {
+				argument = argument.substring(1);
+			}
+			if (argument.endsWith("...")) {
+				argumentType = StringArgumentType.greedyString();
+			}
 
-                                return builder.buildFuture();
-                            }
-                    ));
-        }
+			String finalArgument = argument;
+			arguments.add(Commands
+					.argument(argument, argumentType)
+					.suggests((context, builder) -> {
+								String argumentValue = "";
+								try {
+									argumentValue = context.getArgument(finalArgument, String.class);
+								} catch (IllegalArgumentException ignored) {
+								}
 
-        ArgumentBuilder<CommandSourceStack, ?> then = null;
+								List<String> suggestions = ListUtils.getListThatStartsWith(onAutoComplete(finalArgument, context), argumentValue);
 
-        if (!arguments.isEmpty()) {
-            arguments.getLast().executes(this::internalExecute);
+								for (String suggestion : suggestions) {
+									builder.suggest(suggestion);
+								}
 
-            if (arguments.size() != 1) {
-                for (int index = arguments.size() - 2; index >= 0; index--) {
-                    arguments.get(index).then(arguments.get(index + 1));
+								return builder.buildFuture();
+							}
+					));
+		}
 
-                    if (getArguments().get(index + 1).startsWith("?")) {
-                        arguments.get(index).executes(this::internalExecute);
-                    }
-                }
-            }
+		ArgumentBuilder<CommandSourceStack, ?> then = null;
 
-            then = arguments.getFirst();
-        } else {
-            command.executes(this::internalExecute);
-        }
+		if (!arguments.isEmpty()) {
+			arguments.getLast().executes(this::internalExecute);
 
-        if (then != null) {
-            command.then(then);
-        }
+			if (arguments.size() != 1) {
+				for (int index = arguments.size() - 2; index >= 0; index--) {
+					arguments.get(index).then(arguments.get(index + 1));
 
-        return command;
-    }
+					if (getArguments().get(index + 1).startsWith("?")) {
+						arguments.get(index).executes(this::internalExecute);
+					}
+				}
+			}
 
-    protected List<String> onAutoComplete(@NotNull String argument, @NotNull CommandContext<CommandSourceStack> context) {
-        return new ArrayList<>();
-    }
+			then = arguments.getFirst();
 
-    @Override
-    protected final void internalExecutePlayer(@NotNull Object player, @NotNull List<String> arguments) {
-        executePlayer((ServerPlayer) player, arguments);
-    }
+			if (getArguments().get(0).startsWith("?")) {
+				command.executes(this::internalExecute);
+			}
+		} else {
+			command.executes(this::internalExecute);
+		}
 
-    @Override
-    protected final void internalExecuteConsole(@NotNull Object console, @NotNull List<String> arguments) {
-        executeConsole((MinecraftServer) console, arguments);
-    }
+		if (then != null) {
+			command.then(then);
+		}
 
-    @Override
-    protected final void internalExecuteCommon(@NotNull Object sender, @NotNull List<String> arguments) {
-        executeCommon((CommandSource) sender, arguments);
-    }
+		return command;
+	}
 
-    protected void executePlayer(@NotNull ServerPlayer player, @NotNull List<String> arguments) {
+	protected List<String> onAutoComplete(@NotNull String argument, @NotNull CommandContext<CommandSourceStack> context) {
+		return new ArrayList<>();
+	}
 
-    }
+	@Override
+	protected final void internalExecutePlayer(@NotNull Object player, @NotNull List<String> arguments) {
+		executePlayer((ServerPlayer) player, arguments);
+	}
 
-    protected void executeConsole(@NotNull MinecraftServer console, @NotNull List<String> arguments) {
+	@Override
+	protected final void internalExecuteConsole(@NotNull Object console, @NotNull List<String> arguments) {
+		executeConsole((MinecraftServer) console, arguments);
+	}
 
-    }
+	@Override
+	protected final void internalExecuteCommon(@NotNull Object sender, @NotNull List<String> arguments) {
+		executeCommon((CommandSource) sender, arguments);
+	}
 
-    protected void executeCommon(@NotNull CommandSource sender, @NotNull List<String> arguments) {
+	protected void executePlayer(@NotNull ServerPlayer player, @NotNull List<String> arguments) {
 
-    }
+	}
 
-    protected List<String> recommendPlayersList() {
-        return commandManager.getServer().getPlayerList().getPlayers().stream()
-                .map(ServerPlayer::getDisplayName)
-                .map(Component::getString)
-                .toList();
-    }
+	protected void executeConsole(@NotNull MinecraftServer console, @NotNull List<String> arguments) {
+
+	}
+
+	protected void executeCommon(@NotNull CommandSource sender, @NotNull List<String> arguments) {
+
+	}
+
+	protected List<String> recommendPlayersList() {
+		return commandManager.getServer().getPlayerList().getPlayers().stream()
+				.map(ServerPlayer::getDisplayName)
+				.map(Component::getString)
+				.toList();
+	}
 }

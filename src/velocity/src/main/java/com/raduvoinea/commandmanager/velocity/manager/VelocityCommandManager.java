@@ -18,39 +18,39 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 public class VelocityCommandManager extends CommonCommandManager {
 
-    private final ProxyServer proxy;
-    private final VelocityMiniMessageManager miniMessageManager;
-    private final Object plugin;
+	private final ProxyServer proxy;
+	private final VelocityMiniMessageManager miniMessageManager;
+	private final Object plugin;
 
-    public VelocityCommandManager(@NotNull Object plugin, @NotNull ProxyServer proxy,
-                                  @NotNull Reflections.Crawler reflectionsCrawler, @NotNull CommandManagerConfig config,
-                                  @NotNull Holder<Injector> injectorHolder) {
-        super(reflectionsCrawler, Player.class, ConsoleCommandSource.class, CommandSource.class, config, injectorHolder);
+	public VelocityCommandManager(@NotNull Object plugin, @NotNull ProxyServer proxy,
+	                              @NotNull Reflections.Crawler reflectionsCrawler, @NotNull CommandManagerConfig config,
+	                              @NotNull Holder<Injector> injectorHolder) {
+		super(reflectionsCrawler, Player.class, ConsoleCommandSource.class, CommandSource.class, config, injectorHolder);
 
-        this.plugin = plugin;
-        this.proxy = proxy;
-        this.miniMessageManager = new VelocityMiniMessageManager();
-    }
+		this.plugin = plugin;
+		this.proxy = proxy;
+		this.miniMessageManager = new VelocityMiniMessageManager();
+	}
 
-    @Override
-    protected void platformRegister(@NotNull CommonCommand primitiveCommand) {
-        VelocityCommand command = (VelocityCommand) primitiveCommand;
+	@Override
+	protected void platformRegister(@NotNull CommonCommand primitiveCommand) {
+		VelocityCommand command = (VelocityCommand) primitiveCommand;
 
-        com.velocitypowered.api.command.CommandManager commandManager = proxy.getCommandManager();
+		com.velocitypowered.api.command.CommandManager commandManager = proxy.getCommandManager();
 
-        CommandMeta commandMeta = commandManager.metaBuilder(command.getMainAlias())
-                .aliases(command.getAliases().subList(1, command.getAliases().size()).toArray(new String[0]))
-                .plugin(this.plugin)
-                .build();
+		CommandMeta commandMeta = commandManager.metaBuilder(command.getMainAlias())
+				.aliases(command.getAliases().subList(1, command.getAliases().size()).toArray(new String[0]))
+				.plugin(this.plugin)
+				.build();
 
 
-        commandManager.register(commandMeta, command);
-    }
+		commandManager.register(commandMeta, command);
+	}
 
-    @Override
-    public final void sendMessage(Object user, String message) {
-        CommandSource source = (CommandSource) user;
-        source.sendMessage(miniMessageManager.parse(message));
-    }
+	@Override
+	public final void sendMessage(Object user, String message) {
+		CommandSource source = (CommandSource) user;
+		source.sendMessage(miniMessageManager.parse(message));
+	}
 
 }

@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class VelocityMiniMessageManager extends CommonMiniMessageManager<Component> {
 
-    @Override
-    public @NotNull Component toNative(@NotNull Component component) {
-        return component;
-    }
+	@Override
+	public @NotNull Component toNative(@NotNull Component component) {
+		return component;
+	}
 
-    @Override
-    public @NotNull String sanitize(Component component) {
-        TextComponent textComponent = (TextComponent) component;
-        return textComponent.content();
-    }
+	@Override
+	public @NotNull String sanitize(Component component) {
+		TextComponent textComponent = (TextComponent) component;
+		return textComponent.content();
+	}
 }
