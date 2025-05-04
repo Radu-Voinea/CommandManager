@@ -88,10 +88,11 @@ public abstract class FabricCommand extends CommonCommand {
 		List<ArgumentBuilder<CommandSourceStack, ?>> arguments = new ArrayList<>();
 
 		for (String argument : getArguments()) {
+			ArgumentType<String> argumentType = StringArgumentType.string();
+
 			if (argument.startsWith("?")) {
 				argument = argument.substring(1);
 			}
-			ArgumentType<String> argumentType = StringArgumentType.string();
 			if (argument.endsWith("...")) {
 				argumentType = StringArgumentType.greedyString();
 			}
@@ -100,7 +101,12 @@ public abstract class FabricCommand extends CommonCommand {
 			arguments.add(Commands
 					.argument(argument, argumentType)
 					.suggests((context, builder) -> {
-								String argumentValue = context.getArgument(finalArgument, String.class);
+								String argumentValue = "";
+								try {
+									argumentValue = context.getArgument(finalArgument, String.class);
+								} catch (IllegalArgumentException ignored) {
+								}
+
 								List<String> suggestions = ListUtils.getListThatStartsWith(onAutoComplete(finalArgument, context), argumentValue);
 
 								for (String suggestion : suggestions) {
@@ -128,6 +134,10 @@ public abstract class FabricCommand extends CommonCommand {
 			}
 
 			then = arguments.getFirst();
+
+			if (getArguments().get(0).startsWith("?")) {
+				command.executes(this::internalExecute);
+			}
 		} else {
 			command.executes(this::internalExecute);
 		}
