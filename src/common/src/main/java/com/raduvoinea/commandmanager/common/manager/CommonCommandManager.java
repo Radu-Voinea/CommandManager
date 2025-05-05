@@ -40,6 +40,36 @@ public abstract class CommonCommandManager {
 		this.injectorHolder = injectorHolder;
 	}
 
+	public <T extends CommonCommand> void register(Command commandAnnotation, @NotNull T command) {
+		try {
+			if (commandAnnotation != null && commandAnnotation.parent() != CommonCommand.class) {
+				return;
+			}
+
+			if (!injectorHolder.isEmpty()) {
+				injectorHolder.value().inject(command);
+			}
+
+			register(command);
+		} catch (Throwable error) {
+			// Do not print NotAnnotated error as errors, but was warnings. There are legitimate uses of it not being
+			// annotated, but it might also be an oversight that needs to be addressed.
+			if (error instanceof CommandNotAnnotated) {
+				Logger.warn(error.getMessage());
+				return;
+			}
+
+			if (error instanceof InvocationTargetException invocationError) {
+				if (invocationError.getTargetException() instanceof CommandNotAnnotated) {
+					Logger.warn(invocationError.getTargetException().getMessage());
+					return;
+				}
+			}
+
+			Logger.error(error);
+		}
+	}
+
 	public void register(@NotNull Class<? extends CommonCommand> commandClass) {
 		register(commandClass.getAnnotation(Command.class), commandClass);
 	}

@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.common.utils.ListUtils;
@@ -31,6 +32,11 @@ public abstract class FabricCommand extends CommonCommand {
 
 	public static final String commandSourceFiled = "field_9819";
 	private final FabricCommandManager commandManager;
+
+	public FabricCommand(CommonCommandManager commandManager, Command commandAnnotation) {
+		super(commandManager, commandAnnotation);
+		this.commandManager = (FabricCommandManager) commandManager;
+	}
 
 	public FabricCommand(CommonCommandManager commandManager) {
 		super(commandManager);

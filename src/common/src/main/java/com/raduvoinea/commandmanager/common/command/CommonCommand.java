@@ -17,17 +17,25 @@ import java.util.stream.Collectors;
 public abstract class CommonCommand {
 
 	// Provided
-	private final CommonCommandManager commandManager;
-	private final @Getter Command annotation;
-	private final List<CommonCommand> subCommands;
+	private CommonCommandManager commandManager;
+	private @Getter Command annotation;
+	private List<CommonCommand> subCommands;
+
+	public CommonCommand(CommonCommandManager commandManager, Command commandAnnotation) {
+		init(commandManager, commandAnnotation);
+	}
 
 	public CommonCommand(CommonCommandManager commandManager) throws CommandNotAnnotated {
+		init(commandManager, this.getClass().getAnnotation(Command.class));
+	}
+
+	private void init(CommonCommandManager commandManager, Command commandAnnotation) {
 		this.commandManager = commandManager;
-		if (!this.getClass().isAnnotationPresent(Command.class)) {
+		if (commandAnnotation == null) {
 			throw new CommandNotAnnotated("Command " + this.getClass().getName() + " is not annotated with @Command.");
 		}
 
-		this.annotation = this.getClass().getAnnotation(Command.class);
+		this.annotation = commandAnnotation;
 
 		subCommands = commandManager.getReflectionsCrawler().getOfType(CommonCommand.class)
 				.stream()
