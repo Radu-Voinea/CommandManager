@@ -27,9 +27,4 @@ public class FabricMiniMessageManager extends CommonMiniMessageManager<Component
 		return audiences.toNative(component);
 	}
 
-	@Override
-	public @NotNull String sanitize(net.kyori.adventure.text.Component component) {
-		TextComponent textComponent = (TextComponent) component;
-		return textComponent.content();
-	}
 }

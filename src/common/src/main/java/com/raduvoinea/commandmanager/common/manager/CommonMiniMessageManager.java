@@ -50,10 +50,8 @@ public abstract class CommonMiniMessageManager<NativeComponent> {
 	}
 
 	public @NotNull String sanitize(@NotNull String text) {
-		return sanitize(toComponent(text));
+		return MiniMessage.miniMessage().stripTags(text);
 	}
-
-	public abstract @NotNull String sanitize(Component component);
 
 	public String serialize(Component component) {
 		return MiniMessage.miniMessage().serialize(component);

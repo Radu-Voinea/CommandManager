@@ -12,9 +12,4 @@ public class VelocityMiniMessageManager extends CommonMiniMessageManager<Compone
 		return component;
 	}
 
-	@Override
-	public @NotNull String sanitize(Component component) {
-		TextComponent textComponent = (TextComponent) component;
-		return textComponent.content();
-	}
 }
