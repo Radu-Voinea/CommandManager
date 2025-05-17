@@ -1,16 +1,12 @@
 @file:Suppress("VulnerableLibrariesLocal")
 
-plugins{
-    alias(libs.plugins.jetbrin.gradle.plugin.idea.ext)
-}
-
 dependencies {
     // Velocity
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
 
     // Project
-    api(project(":command-manager-common"))
+    api(project(":common"))
 
     // Dependencies
     if (project.properties["com.raduvoinea.utils.local"] != null) {
@@ -31,32 +27,4 @@ dependencies {
     testAnnotationProcessor(libs.jetbrains.annotations)
 }
 
-tasks {
-    sourceSets.main {
-        java {
-            srcDir("$buildDir/generated/sources/templates")
-        }
-    }
-
-    compileJava {
-        dependsOn(generateTemplates)
-    }
-
-}
-
-val generateTemplates = tasks.register<Sync>("generateTemplates") {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-    println("$projectDir")
-
-    from("$projectDir/src/main/templates")
-    into("$buildDir/generated/sources/templates")
-
-    filter { line ->
-        line.replace("\${id}", project.name.lowercase().replace(".", "_"))
-            .replace("\${version}", project.version as String)
-            .replace("{id}", project.name.lowercase().replace(".", "_"))
-            .replace("{version}", project.version as String)
-    }
-}
 

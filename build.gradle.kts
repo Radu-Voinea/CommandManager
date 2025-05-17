@@ -25,13 +25,6 @@ fun getProperty(name: String): String {
 }
 
 fun DependencyHandlerScope.applyDependencies() {
-    // Dependencies
-    if (project.properties["com.raduvoinea.utils.local"] != null) {
-        api(project(project.properties["com.raduvoinea.utils.local"] as String))
-    } else {
-        api(libs.raduvoinea.utils)
-    }
-
     // Annotations
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

@@ -1,12 +1,8 @@
 dependencies {
     // Dependencies
-    if (project.properties["com.raduvoinea.utils.local"] != null) {
-        api(project(project.properties["com.raduvoinea.utils.local"] as String))
-    } else {
-        api(libs.raduvoinea.utils)
-    }
-    api(libs.luckperms)
-    api(libs.kyori.minimessage)
+    compileOnlyApi(libs.raduvoinea.utils)
+    compileOnlyApi(libs.luckperms)
+    compileOnlyApi(libs.kyori.minimessage)
 
     // Annotations
     compileOnly(libs.lombok)
