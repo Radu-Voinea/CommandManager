@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "example_mod",
+  "id": "command_manager_fabric",
   "version": "${version}",
   "name": "Example Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
@@ -14,17 +14,8 @@
   "license": "CC0-1.0",
   "icon": "assets/example_mod/icon.png",
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      "com.example.fabric.ExampleModFabric"
-    ],
-    "client": [
-      "com.example.fabric.client.ExampleModFabricClient"
-    ]
-  },
-  "mixins": [
-    "example_mod.mixins.json"
-  ],
+  "entrypoints": {},
+  "mixins": [],
   "depends": {
     "fabricloader": ">=0.16.14",
     "minecraft": "~1.21.1",

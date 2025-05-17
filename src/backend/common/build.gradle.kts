@@ -32,7 +32,7 @@ dependencies {
     modCompileOnly(Libs.fabric.loader)
     modCompileOnlyApi(Libs.architectury.common)
 
-    api(project(":common"))
+    api(project(":command-manager.common"))
     modCompileOnlyApi("net.kyori:adventure-platform-mod-shared-fabric-repack:6.0.0")
 }
 

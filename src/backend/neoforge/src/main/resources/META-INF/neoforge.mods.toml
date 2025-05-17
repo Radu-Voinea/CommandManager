@@ -4,7 +4,7 @@ loaderVersion = "[4,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "example_mod"
+modId = "command_manager_neoforge"
 version = "${version}"
 displayName = "Example Mod"
 authors = "Me!"
@@ -13,26 +13,24 @@ This is an example description! Tell everyone what your mod is about!
 '''
 #logoFile = ""
 
-[[dependencies.example_mod]]
+[[dependencies.command_manager_neoforge]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.example_mod]]
+[[dependencies.command_manager_neoforge]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.example_mod]]
+[[dependencies.command_manager_neoforge]]
 modId = "architectury"
 type = "required"
 versionRange = "[13.0.8,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[mixins]]
-config = "example_mod.mixins.json"

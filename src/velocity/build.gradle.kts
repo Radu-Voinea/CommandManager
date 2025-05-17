@@ -1,21 +1,12 @@
 @file:Suppress("VulnerableLibrariesLocal")
 
 dependencies {
-    // Velocity
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
 
-    // Project
-    api(project(":common"))
+    api(project(":command-manager.common"))
+    api(libs.raduvoinea.utils)
 
-    // Dependencies
-    if (project.properties["com.raduvoinea.utils.local"] != null) {
-        api(project(project.properties["com.raduvoinea.utils.local"] as String))
-    } else {
-        api(libs.raduvoinea.utils)
-    }
-
-    // Annotations
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)

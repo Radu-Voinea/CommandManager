@@ -17,9 +17,9 @@ fun defineProject(module: String, path: String) {
     project(module).projectDir = file(path)
 }
 
-defineProject(":common", "src/common")
-defineProject(":backend.common", "src/backend/common")
-defineProject(":backend.neoforge", "src/backend/neoforge")
-defineProject(":backend.fabric", "src/backend/fabric")
-defineProject(":velocity", "src/velocity")
+defineProject(":command-manager.common", "src/common")
+defineProject(":command-manager.backend.common", "src/backend/common")
+defineProject(":command-manager.backend.neoforge", "src/backend/neoforge")
+defineProject(":command-manager.backend.fabric", "src/backend/fabric")
+defineProject(":command-manager.velocity", "src/velocity")
 // TODO: Spigot (Bukkit) Support
