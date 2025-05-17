@@ -37,9 +37,9 @@ dependencies {
     "neoForge"(Libs.neoforge)
     modImplementation(Libs.architectury.neoforge)
 
-    api(project(":command-manager.common"))
-    compileOnlyApi(project(":command-manager.backend.common", configuration = "namedElements"))
-    implementation(project(":command-manager.backend.common", configuration = "transformProductionNeoForge"))
+    api(project(":command-manager-common"))
+    compileOnlyApi(project(":command-manager-backend-common", configuration = "namedElements"))
+    implementation(project(":command-manager-backend-common", configuration = "transformProductionNeoForge"))
 
     modCompileOnlyApi("net.kyori:adventure-platform-neoforge:6.4.0")
 }

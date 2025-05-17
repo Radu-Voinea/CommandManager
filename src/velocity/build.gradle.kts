@@ -4,7 +4,7 @@ dependencies {
     compileOnly(libs.velocity)
     annotationProcessor(libs.velocity)
 
-    api(project(":command-manager.common"))
+    api(project(":command-manager-common"))
     api(libs.raduvoinea.utils)
 
     compileOnly(libs.lombok)
