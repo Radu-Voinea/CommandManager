@@ -34,11 +34,10 @@ dependencies {
         parchment(Libs.parchment)
     })
 
-    "neoForge"(Libs.neoforge)
+    neoForge(Libs.neoforge)
     modImplementation(Libs.architectury.neoforge)
 
-    api(project(":command-manager-common"))
-    compileOnlyApi(project(":command-manager-backend-common", configuration = "namedElements"))
+    api(project(":command-manager-backend-common"))
     implementation(project(":command-manager-backend-common", configuration = "transformProductionNeoForge"))
 
     modCompileOnlyApi("net.kyori:adventure-platform-neoforge:6.4.0")

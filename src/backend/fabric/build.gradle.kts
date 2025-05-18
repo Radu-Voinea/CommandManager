@@ -40,8 +40,7 @@ dependencies {
     modApi(Libs.fabric.api)
     modApi(Libs.architectury.fabric)
 
-    api(project(":command-manager-common"))
-    compileOnlyApi(project(":command-manager-backend-common", configuration = "namedElements"))
+    api(project(":command-manager-backend-common"))
     implementation(project(":command-manager-backend-common", configuration = "transformProductionFabric"))
 
     modCompileOnlyApi("net.kyori:adventure-platform-fabric:6.4.0")
