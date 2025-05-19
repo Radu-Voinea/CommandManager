@@ -5,19 +5,18 @@
   "name": "Example Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "Radu Voinea"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://raduvoinea.com/"
   },
   "license": "CC0-1.0",
-  "icon": "assets/example_mod/icon.png",
+  "icon": "none",
   "environment": "*",
   "entrypoints": {},
   "mixins": [],
   "depends": {
-    "fabricloader": ">=0.16.14",
+    "fabricloader": ">=0.16.10",
     "minecraft": "~1.21.1",
     "java": ">=21",
     "architectury": ">=13.0.8",
