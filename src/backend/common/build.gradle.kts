@@ -18,10 +18,6 @@ loom {
     silentMojangMappingsLicense()
 }
 
-configurations.implementation{
-    isCanBeResolved = true
-}
-
 dependencies {
     minecraft(Libs.minecraft)
     mappings(loom.layered {
@@ -30,21 +26,35 @@ dependencies {
     })
 
     modCompileOnly(Libs.fabric.loader)
-    modCompileOnlyApi(Libs.architectury.common)
+    modCompileOnly(Libs.architectury.common)
 
     api(project(":command-manager-common"))
-    modCompileOnlyApi("net.kyori:adventure-platform-mod-shared-fabric-repack:6.0.0")
+    modCompileOnly("net.kyori:adventure-platform-mod-shared-fabric-repack:6.0.0")
 }
 
 tasks {
     shadowJar{
         archiveFileName = "CommandManager-Backend-Common-${version}-all.jar"
-        configurations = listOf(project.configurations.implementation.get())
+        configurations = listOf(
+            project.configurations.api.get(),
+            project.configurations.implementation.get(),
+            project.configurations.modApi.get(),
+            project.configurations.modImplementation.get()
+        )
     }
 
     remapJar {
         archiveFileName = "CommandManager-Backend-Common-${version}.jar"
         inputFile.set(shadowJar.get().archiveFile)
         dependsOn(shadowJar)
+    }
+}
+
+configurations{
+    implementation{
+        isCanBeResolved = true
+    }
+    api{
+        isCanBeResolved=true
     }
 }

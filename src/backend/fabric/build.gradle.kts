@@ -18,11 +18,6 @@ architectury {
     fabric()
 }
 
-configurations.implementation{
-    isCanBeResolved = true
-    isCanBeConsumed = false
-}
-
 val (type, module, id) = Utils.getProjectMetadata(project.name)
 
 loom {
@@ -36,21 +31,26 @@ dependencies {
         parchment(Libs.parchment)
     })
 
-    modImplementation(Libs.fabric.loader)
-    modApi(Libs.fabric.api)
-    modApi(Libs.architectury.fabric)
+    modCompileOnly(Libs.fabric.loader)
+    modCompileOnly(Libs.fabric.api)
+    modCompileOnly(Libs.architectury.fabric)
 
     api(project(":command-manager-backend-common"))
     implementation(project(":command-manager-backend-common", configuration = "transformProductionFabric"))
 
-    modCompileOnlyApi("net.kyori:adventure-platform-fabric:6.4.0")
+    modCompileOnly("net.kyori:adventure-platform-fabric:6.4.0")
 }
 
 tasks {
     shadowJar {
         archiveFileName = "CommandManager-Fabric-${version}-all.jar"
 
-        configurations = listOf(project.configurations.implementation.get())
+        configurations = listOf(
+            project.configurations.api.get(),
+            project.configurations.implementation.get(),
+            project.configurations.modApi.get(),
+            project.configurations.modImplementation.get()
+        )
         exclude("architectury.common.json")
     }
 
@@ -70,5 +70,14 @@ components.getByName("java") {
     this as AdhocComponentWithVariants
     this.withVariantsFromConfiguration(project.configurations["shadowRuntimeElements"]) {
         skip()
+    }
+}
+
+configurations{
+    implementation{
+        isCanBeResolved = true
+    }
+    api{
+        isCanBeResolved=true
     }
 }
