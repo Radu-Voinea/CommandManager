@@ -3,7 +3,7 @@ package com.raduvoinea.commandmanager.backend.common.manager;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
-import com.raduvoinea.commandmanager.backend.common.command.ModCommand;
+import com.raduvoinea.commandmanager.backend.common.command.BackendCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonMiniMessageManager;
 import com.raduvoinea.utils.dependency_injection.Injector;
 import com.raduvoinea.utils.generic.dto.Holder;
@@ -34,7 +34,7 @@ public abstract class CommonBackendCommandManager extends CommonCommandManager {
 
 	@Override
 	protected void platformRegister(@NotNull CommonCommand primitiveCommand) {
-		ModCommand command = (ModCommand) primitiveCommand;
+		BackendCommand command = (BackendCommand) primitiveCommand;
 
 		for (String alias : command.getAliases()) {
 			server.getCommands().getDispatcher().register(command.getCommandBuilder(alias));

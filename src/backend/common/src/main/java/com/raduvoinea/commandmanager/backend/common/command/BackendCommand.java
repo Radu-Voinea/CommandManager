@@ -28,23 +28,23 @@ import static net.minecraft.commands.Commands.literal;
 
 
 @SuppressWarnings("unused")
-public abstract class ModCommand extends CommonCommand {
+public abstract class BackendCommand extends CommonCommand {
 
 	private final CommonBackendCommandManager commandManager;
 
-	public ModCommand(CommonCommandManager commandManager, Command commandAnnotation) {
+	public BackendCommand(CommonCommandManager commandManager, Command commandAnnotation) {
 		super(commandManager, commandAnnotation);
 		this.commandManager = (CommonBackendCommandManager) commandManager;
 	}
 
-	public ModCommand(CommonCommandManager commandManager) {
+	public BackendCommand(CommonCommandManager commandManager) {
 		super(commandManager);
 		this.commandManager = (CommonBackendCommandManager) commandManager;
 	}
 
-	public @NotNull Set<ModCommand> getSubCommands() {
+	public @NotNull Set<BackendCommand> getSubCommands() {
 		return getPrimitiveSubCommands()
-				.stream().map(command -> (ModCommand) command)
+				.stream().map(command -> (BackendCommand) command)
 				.collect(Collectors.toSet());
 	}
 
@@ -83,7 +83,7 @@ public abstract class ModCommand extends CommonCommand {
 	public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
 		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias);
 
-		for (ModCommand subCommand : getSubCommands()) {
+		for (BackendCommand subCommand : getSubCommands()) {
 			Logger.log("Registering subcommand(s): " + subCommand.getAliases() + " for " + alias);
 			for (String subAlias : subCommand.getAliases()) {
 				command = command.then(subCommand.getCommandBuilder(subAlias));
