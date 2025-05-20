@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "command_manager_fabric",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "command_manager_fabric",
+  "description": "",
   "authors": [
     "Radu Voinea"
   ],
@@ -15,14 +15,6 @@
   "environment": "*",
   "entrypoints": {},
   "mixins": [],
-  "depends": {
-    "fabricloader": ">=0.16.10",
-    "minecraft": "~1.21.1",
-    "java": ">=21",
-    "architectury": ">=13.0.8",
-    "fabric-api": "*"
-  },
-  "suggests": {
-    "another-mod": "*"
-  }
+  "depends": {},
+  "suggests": {}
 }
