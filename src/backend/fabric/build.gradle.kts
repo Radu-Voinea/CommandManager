@@ -38,7 +38,7 @@ dependencies {
     api(project(":command-manager-backend-common"))
     implementation(project(":command-manager-backend-common", configuration = "transformProductionFabric"))
 
-    modCompileOnly("net.kyori:adventure-platform-fabric:6.4.0")
+    modCompileOnly("net.kyori:adventure-platform-fabric:6.1.0")
 }
 
 tasks {

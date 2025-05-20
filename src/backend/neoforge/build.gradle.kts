@@ -40,7 +40,7 @@ dependencies {
     api(project(":command-manager-backend-common"))
     implementation(project(":command-manager-backend-common", configuration = "transformProductionNeoForge"))
 
-    modCompileOnlyApi("net.kyori:adventure-platform-neoforge:6.4.0")
+    modCompileOnlyApi("net.kyori:adventure-platform-neoforge:6.1.0")
 }
 
 tasks {

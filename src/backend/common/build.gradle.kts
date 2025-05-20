@@ -29,7 +29,7 @@ dependencies {
     modCompileOnly(Libs.architectury.common)
 
     api(project(":command-manager-common"))
-    modCompileOnly("net.kyori:adventure-platform-mod-shared-fabric-repack:6.0.0")
+    modCompileOnly("net.kyori:adventure-platform-mod-shared-fabric-repack:6.1.0")
 }
 
 tasks {
