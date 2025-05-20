@@ -24,6 +24,28 @@ loom {
     silentMojangMappingsLicense()
 }
 
+val common = configurations.create("common") {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
+
+val shadowBundle = configurations.create("shadowBundle") {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
+
+configurations {
+    compileClasspath {
+        extendsFrom(common)
+    }
+    runtimeClasspath {
+        extendsFrom(common)
+    }
+    api{
+        extendsFrom(shadowBundle)
+    }
+}
+
 dependencies {
     minecraft(Libs.minecraft)
     mappings(loom.layered {
@@ -35,22 +57,19 @@ dependencies {
     modCompileOnly(Libs.fabric.api)
     modCompileOnly(Libs.architectury.fabric)
 
-    api(project(":command-manager-backend-common"))
-    implementation(project(":command-manager-backend-common", configuration = "transformProductionFabric"))
+    shadowBundle(project(":command-manager-common"))
 
-    modCompileOnly("net.kyori:adventure-platform-fabric:6.1.0")
+    common(project(":command-manager-backend-common"))
+    shadowBundle(project(":command-manager-backend-common", configuration = "transformProductionFabric"))
+
+    modCompileOnly("net.kyori:adventure-platform-fabric:5.14.1")
 }
 
 tasks {
     shadowJar {
         archiveFileName = "CommandManager-Fabric-${version}-all.jar"
 
-        configurations = listOf(
-            project.configurations.api.get(),
-            project.configurations.implementation.get(),
-            project.configurations.modApi.get(),
-            project.configurations.modImplementation.get()
-        )
+        configurations = listOf(shadowBundle)
         exclude("architectury.common.json")
     }
 

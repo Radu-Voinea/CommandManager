@@ -4,14 +4,14 @@ import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.config.CommandManagerConfig;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.backend.common.command.ModCommand;
+import com.raduvoinea.commandmanager.common.manager.CommonMiniMessageManager;
 import com.raduvoinea.utils.dependency_injection.Injector;
 import com.raduvoinea.utils.generic.dto.Holder;
 import com.raduvoinea.utils.logger.Logger;
 import com.raduvoinea.utils.reflections.Reflections;
 import lombok.Getter;
-import net.kyori.adventure.platform.modcommon.MinecraftAudiences;
-import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.commands.CommandSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +20,16 @@ import org.jetbrains.annotations.NotNull;
 public abstract class CommonBackendCommandManager extends CommonCommandManager {
 
 	private final MinecraftServer server;
-	private final BackendMiniMessageManager miniMessageManager;
+	private final CommonMiniMessageManager<Component> miniMessageManager;
 
 	public CommonBackendCommandManager(@NotNull Reflections.Crawler reflectionsCrawler,
 	                                   @NotNull CommandManagerConfig config, @NotNull MinecraftServer server,
-	                                   @NotNull Holder<Injector> injector, MinecraftAudiences audiences) {
+	                                   @NotNull Holder<Injector> injector,
+	                                   @NotNull CommonMiniMessageManager<Component> miniMessageManager) {
 		super(reflectionsCrawler, ServerPlayer.class, MinecraftServer.class, CommandSource.class, config, injector);
 
 		this.server = server;
-		this.miniMessageManager = new BackendMiniMessageManager(audiences);
+		this.miniMessageManager = miniMessageManager;
 	}
 
 	@Override
