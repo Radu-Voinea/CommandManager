@@ -5,11 +5,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.raduvoinea.commandmanager.backend.common.manager.CommonBackendCommandManager;
 import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.common.utils.ListUtils;
-import com.raduvoinea.commandmanager.backend.common.manager.CommonBackendCommandManager;
+import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
 import com.raduvoinea.utils.logger.Logger;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -81,7 +82,8 @@ public abstract class BackendCommand extends CommonCommand {
 	}
 
 	public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
-		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias);
+		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias)
+				.requires(source -> hasPermission(source, getPermission()));
 
 		for (BackendCommand subCommand : getSubCommands()) {
 			Logger.log("Registering subcommand(s): " + subCommand.getAliases() + " for " + alias);
@@ -190,5 +192,13 @@ public abstract class BackendCommand extends CommonCommand {
 				.map(ServerPlayer::getDisplayName)
 				.map(Component::getString)
 				.toList();
+	}
+
+	protected boolean hasPermission(@NotNull CommandSourceStack source, @NotNull String permission) {
+		if (!source.isPlayer()) {
+			return true;
+		}
+
+		return LuckPermsUtils.checkPermission(ServerPlayer.class, source.getPlayer(), permission);
 	}
 }

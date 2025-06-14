@@ -3,6 +3,7 @@ package com.raduvoinea.commandmanager.velocity.command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.common.utils.ListUtils;
+import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
 import com.raduvoinea.commandmanager.velocity.manager.VelocityCommandManager;
 import com.raduvoinea.utils.logger.Logger;
 import com.velocitypowered.api.command.CommandSource;
@@ -27,35 +28,50 @@ public abstract class VelocityCommand extends CommonCommand implements SimpleCom
 		this.commandManager = (VelocityCommandManager) commandManager;
 	}
 
+	public @NotNull List<String> onAutoCompleteFiltered(List<String> arguments, CommandSource source) {
+		List<String> allArguments = new ArrayList<>();
+
+		for (VelocityCommand subCommand : getSubCommands()) {
+			if (hasPermission(source, subCommand.getPermission())) {
+				allArguments.addAll(subCommand.getAliases());
+			}
+		}
+
+		return allArguments;
+	}
+
+
 	@Override
 	public final List<String> suggest(Invocation invocation) {
+		CommandSource source = invocation.source();
 		int argsLength = invocation.arguments().length;
 		List<String> arguments = Arrays.asList(invocation.arguments());
 
+		if (!hasPermission(source, getPermission())) {
+			return Collections.emptyList();
+		}
+
 		if (argsLength == 0) {
-			return onAutoComplete(arguments);
+			return onAutoCompleteFiltered(arguments, source);
 		}
 
 		String lastArg = invocation.arguments()[argsLength - 1];
 		VelocityCommand subCommand = getSubCommand(lastArg);
 
-		if (subCommand == null) {
-			if (argsLength == 1) {
-				return ListUtils.getListThatStartsWith(onAutoComplete(arguments), lastArg);
-			}
-
+		// Try second-to-last arg in case it's two-depth
+		if (subCommand == null && argsLength > 1) {
 			String lastArg2 = invocation.arguments()[argsLength - 2];
 			subCommand = getSubCommand(lastArg2);
-
-			if (subCommand == null) {
-				return ListUtils.getListThatStartsWith(onAutoComplete(arguments), lastArg2);
+			if (subCommand != null && subCommand.hasPermission(source, subCommand.getPermission())) {
+				return ListUtils.getListThatStartsWith(subCommand.onAutoComplete(arguments), lastArg);
 			}
-
+		} else if (subCommand != null && subCommand.hasPermission(source, subCommand.getPermission())) {
 			return ListUtils.getListThatStartsWith(subCommand.onAutoComplete(arguments), lastArg);
 		}
 
 		return ListUtils.getListThatStartsWith(onAutoComplete(arguments), lastArg);
 	}
+
 
 	private @Nullable VelocityCommand getSubCommand(String name) {
 		for (VelocityCommand subCommand : getSubCommands()) {
@@ -146,5 +162,13 @@ public abstract class VelocityCommand extends CommonCommand implements SimpleCom
 		} catch (Exception e) {
 			return commandManager.getProxy().getPlayer(usernameOrUUID).orElse(null);
 		}
+	}
+
+	protected boolean hasPermission(@NotNull CommandSource source, @NotNull String permission) {
+		if (!(source instanceof Player)) {
+			return true;
+		}
+
+		return LuckPermsUtils.checkPermission(Player.class, source, permission);
 	}
 }

@@ -22,4 +22,5 @@ defineProject(":command-manager-backend-common", "src/backend/common")
 defineProject(":command-manager-backend-neoforge", "src/backend/neoforge")
 defineProject(":command-manager-backend-fabric", "src/backend/fabric")
 defineProject(":command-manager-velocity", "src/velocity")
+defineProject(":command-manager-fabric-21", "src/fabric-21")
 // TODO: Spigot (Bukkit) Support

@@ -14,7 +14,7 @@ object Libs {
     }
 
     object raduvoinea {
-        const val utils = "com.raduvoinea:utils:1.3.13"
+        const val utils = "com.raduvoinea:utils:1.5.8"
         object commandmanager {
             private const val version = "1.1.23"
 

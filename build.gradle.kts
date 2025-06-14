@@ -54,7 +54,7 @@ fun RepositoryHandler.applyRepositories() {
                 password = getProperty("gg.mmorealms.proxy.europe.password")
             }
         }
-    } else if(getProperty("gg.mmorealms.url")=="") {
+    } else if(getProperty("gg.mmorealms.url")!="") {
         maven(url = getProperty("gg.mmorealms.url")) {
             name = "MMORealms-Repository"
             credentials(PasswordCredentials::class) {

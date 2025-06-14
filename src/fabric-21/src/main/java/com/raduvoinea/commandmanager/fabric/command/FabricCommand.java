@@ -9,6 +9,7 @@ import com.raduvoinea.commandmanager.common.annotation.Command;
 import com.raduvoinea.commandmanager.common.command.CommonCommand;
 import com.raduvoinea.commandmanager.common.manager.CommonCommandManager;
 import com.raduvoinea.commandmanager.common.utils.ListUtils;
+import com.raduvoinea.commandmanager.common.utils.LuckPermsUtils;
 import com.raduvoinea.commandmanager.fabric.manager.FabricCommandManager;
 import com.raduvoinea.utils.logger.Logger;
 import net.minecraft.commands.CommandSource;
@@ -82,7 +83,8 @@ public abstract class FabricCommand extends CommonCommand {
 	}
 
 	public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(@NotNull String alias) {
-		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias);
+		LiteralArgumentBuilder<CommandSourceStack> command = literal(alias)
+				.requires(source -> hasPermission(source, getPermission()));
 
 		for (FabricCommand subCommand : getSubCommands()) {
 			Logger.log("Registering subcommand(s): " + subCommand.getAliases() + " for " + alias);
@@ -191,5 +193,13 @@ public abstract class FabricCommand extends CommonCommand {
 				.map(ServerPlayer::getDisplayName)
 				.map(Component::getString)
 				.toList();
+	}
+
+	protected boolean hasPermission(@NotNull CommandSourceStack source, @NotNull String permission) {
+		if (!source.isPlayer()) {
+			return true;
+		}
+
+		return LuckPermsUtils.checkPermission(ServerPlayer.class, source.getPlayer(), permission);
 	}
 }
