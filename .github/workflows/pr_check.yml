@@ -10,7 +10,7 @@ jobs:
     steps:
       # ==================== SETUPS ====================
       - name: Checkout Codebase
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           node-version: '12.x'
 
